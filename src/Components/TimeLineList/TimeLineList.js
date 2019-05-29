@@ -6,32 +6,33 @@ import { acumulateByYear } from "../../Helpers/acumulator"
 import TimeLineListItem from "../TimeLineListItem/TimeLineListItem"
 const TimeLineList = ({ repositories, repositoriesByYear, ...props }) => {
   if (repositories.loading) {
-    return <Spinner margin="auto" marginTop={10} />
+    return <Spinner margin="auto" marginTop={50} />
   } else if (repositories.loaded) {
     return (
-      <VerticalTimeline>
-       <div data-testid="timeline">
-       {Object.keys(repositoriesByYear)
-          .slice(0)
-          .reverse()
-          .map((year, index) => (
-            <div key={index}>
-              <TimeLineListItem
-                year={`Repositórios criados em: ${year}`}
-                repositories={repositoriesByYear[year]}
-              />
-            </div>
-          ))}
-        </div>
-      </VerticalTimeline>
+      <React.Fragment>
+        <h2 style={{ marginTop: "2rem", fontWeight: "normal" }}>
+          {repositories.repositories.length} repositórios agrupados por ano de
+          criação
+        </h2>
+        <VerticalTimeline>
+          <div data-testid="timeline">
+            {Object.keys(repositoriesByYear)
+              .slice(0)
+              .reverse()
+              .map((year, index) => (
+                <TimeLineListItem
+                  year={`${year}`}
+                  repositories={repositoriesByYear[year]}
+                  key={index}
+                />
+              ))}
+          </div>
+        </VerticalTimeline>
+      </React.Fragment>
     )
   }
 
-  return (
-    <Heading size={900} marginTop="default">
-      GitHub Timeline
-    </Heading>
-  )
+  return <Heading size={900} marginTop="default" />
 }
 
 function mapStateToProps({ repositories }) {

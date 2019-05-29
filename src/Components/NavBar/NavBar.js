@@ -3,17 +3,37 @@ import React, { useState } from "react"
 import SearchLanguage from "../Search/SearchLanguage"
 import SearchUser from "../Search/SearchUser"
 
-const Nav = () => {
+const Nav = props => {
   const [selection, setSelection] = useState("UserSearch")
   const handleSelection = e => {
     setSelection(e.target.value)
   }
   return (
-    <div style={{ display: "flex", justifyContent: "center" }} data-testid="navbar">
-      {selection === "UserSearch" ? <SearchUser /> : <SearchLanguage />}
+    <div
+      style={
+        props.repositories.loaded || props.repositories.loading
+          ? {
+              display: "flex",
+              justifyContent: "center",
+              transition: "all 700ms"
+            }
+          : {
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "300px",
+              transition: "all 700ms"
+            }
+      }
+      data-testid="navbar"
+    >
+      {selection === "UserSearch" ? (
+        <SearchUser repositories={props.repositories} />
+      ) : (
+        <SearchLanguage />
+      )}
       <Select
         value={selection}
-        height={40}
+        height={50}
         marginLeft={16}
         marginTop={20}
         onChange={handleSelection}

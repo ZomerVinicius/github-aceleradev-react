@@ -1,56 +1,72 @@
 import { Pane, SearchInput, Table } from "evergreen-ui"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { connect } from "react-redux"
 import { searchRepos } from "../../redux/reducers/repositories"
 import { searchUsers, setUser } from "../../redux/reducers/users"
 const SearchUser = props => {
   const [searchString, setSearchString] = useState("")
   const { dispatch } = props
-  useEffect(() => {
-    dispatch(searchUsers(searchString))
-  }, [searchString, dispatch])
   const handleSelect = user => {
-    setSearchString("")
     dispatch(setUser(user))
+    setSearchString(user.login)
+  }
+
+  const handleSearchChange = e => {
+    const inputValue = e.target.value
+    setSearchString(inputValue)
+    setTimeout(() => {
+      dispatch(searchUsers(inputValue))
+    }, 300)
   }
 
   const handleKeyPress = e => {
     if (e.keyCode === 13) {
-      dispatch(searchRepos(searchString, 'user'))
-      setSearchString("")
+      dispatch(searchRepos(searchString, "user"))
+      dispatch(searchUsers(""))
+    } else if (e.keyCode === 40) {
+      document.getElementById("userDiv") &&
+        document.getElementById("userDiv").focus()
     }
   }
+  let paneStyle = {
+    position: "absolute",
+    zIndex: 999,
+    backgroundColor: "white",
+    borderTop: "none"
+  }
 
+  if (props.users.suggestions.length > 0) {
+    paneStyle = { ...paneStyle, border: "1px solid" }
+  }
   return (
     <div>
       <SearchInput
-        onChange={e => {
-          setSearchString(e.target.value)
-        }}
+        onChange={e => handleSearchChange(e)}
         onKeyDown={handleKeyPress}
         placeholder="Digite o nome do usuário..."
         marginTop={20}
-        height={40}
-        width={500}
+        id="searchInput"
         autoFocus
-        value={searchString}
-      />
-      <Pane
+        height={50}
         width={500}
-        style={{
-          position: "absolute",
-          zIndex: 999
-        }}
-      >
-        {props.users.suggestions.map(user => {
+        value={searchString}
+        data-testid="search-input"
+      />
+      <Pane width={500} style={paneStyle}>
+        {props.users.suggestions.map((user, index) => {
           return (
             <Table.Row
               key={user.id}
+              id="userDiv"
+              tabIndex="0"
               isSelectable
               onSelect={() => handleSelect(user)}
               intent="none"
+              data-testid="users-list"
             >
-              <Table.TextCell>{user.login}</Table.TextCell>
+              <Table.TextCell>
+                <span style={{ fontSize: "15px" }}>{user.login}</span>
+              </Table.TextCell>
             </Table.Row>
           )
         })}
