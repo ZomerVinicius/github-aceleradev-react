@@ -7,25 +7,24 @@ const SearchUser = props => {
   const [searchString, setSearchString] = useState("")
   const { dispatch } = props
   const handleSelect = user => {
+    setSearchString("")
     dispatch(setUser(user))
-    setSearchString(user.login)
   }
 
   const handleSearchChange = e => {
-    const inputValue = e.target.value
-    setSearchString(inputValue)
-    setTimeout(() => {
-      dispatch(searchUsers(inputValue))
-    }, 300)
+    setSearchString(e.target.value)
+    dispatch(searchUsers(searchString))
   }
-
   const handleKeyPress = e => {
-    if (e.keyCode === 13) {
-      dispatch(searchRepos(searchString, "user"))
-      dispatch(searchUsers(""))
-    } else if (e.keyCode === 40) {
-      document.getElementById("userDiv") &&
-        document.getElementById("userDiv").focus()
+    if (searchString !== "") {
+      if (e.keyCode === 13) {
+        dispatch(searchRepos(searchString, "user"))
+        setSearchString("")
+        dispatch(searchUsers(""))
+      } else if (e.keyCode === 40) {
+        document.getElementById("userDiv") &&
+          document.getElementById("userDiv").focus()
+      }
     }
   }
   let paneStyle = {
@@ -47,6 +46,7 @@ const SearchUser = props => {
         marginTop={20}
         id="searchInput"
         autoFocus
+        autoComplete="off"
         height={50}
         width={500}
         value={searchString}

@@ -1,5 +1,6 @@
 import { Select } from "evergreen-ui"
 import React, { useState } from "react"
+import GitHub from "../../images/GitHub.png";
 import SearchLanguage from "../Search/SearchLanguage"
 import SearchUser from "../Search/SearchUser"
 
@@ -20,12 +21,13 @@ const Nav = props => {
           : {
               display: "flex",
               justifyContent: "center",
-              marginTop: "300px",
+              marginTop: "225px",
               transition: "all 700ms"
             }
       }
       data-testid="navbar"
     >
+     <img src={GitHub} alt="GitHub Search" title="GitHub Search" style={{ position: 'relative', right: '2%', width: 80, height: 80, marginTop: 5}} />
       {selection === "UserSearch" ? (
         <SearchUser repositories={props.repositories} />
       ) : (

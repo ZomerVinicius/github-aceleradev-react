@@ -31,7 +31,7 @@ const SearchLanguage = props => {
   }
 
   return (
-    <div>
+    <div style={{textAlign: 'initial'}}>
       <SearchInput
         onChange={e => {
           setRepoString(e.target.value)
@@ -39,12 +39,14 @@ const SearchLanguage = props => {
         onKeyDown={handleKeyPressRepo}
         placeholder="Digite o nome do repositório..."
         marginTop={20}
+        autoComplete='off'
         data-testid="repository-input"
         height={50}
         width={500}
         autoFocus
         value={repoString}
       />
+      <br />
       <SearchInput
         onChange={e => {
           setLanguageString(e.target.value)
@@ -52,8 +54,8 @@ const SearchLanguage = props => {
         onKeyDown={handleKeyPressLanguage}
         placeholder="Linguagem..."
         data-testid="language-input"
+        autoComplete='off'
         marginTop={20}
-        marginLeft={16}
         height={50}
         width={180}
         value={languageString}
